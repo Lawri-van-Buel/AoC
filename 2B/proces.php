@@ -1,7 +1,6 @@
 <?php
 
-
-class aoc_2a {
+class aoc_2b {
   const DEBUG    = false;
   const none     = -1;
   const forward  = 0;
@@ -11,6 +10,7 @@ class aoc_2a {
 
   public int   $distance;
   public int   $depth;
+  public int   $aim;
   public array $stepCounter;
   public int   $index;
   public bool  $planeMode;
@@ -24,6 +24,7 @@ public function __construct() {
   $this->stepCounter[self::up] = 0;
   $this->stepCounter[self::backward] = 0;
   $this->index = -1;
+  $this->aim = 0;
   $this->planeMode = false;
 
 }
@@ -43,15 +44,16 @@ function mainLoop($file = "list"): int
         break;
       case self::forward:
         $this->distance = $this->distance + $val;
+        $this->depth = $this->depth + ($val * $this->aim);
         break;
 //      case self::backward:
 //        $this->distance = $this->distance - $val;
 //        break;
       case self::down:
-        $this->depth = $this->depth + $val;
+        $this->aim = $this->aim + $val;
         break;
       case self::up:
-        $this->depth = $this->depth - $val;
+        $this->aim = $this->aim - $val;
         if ($this->depth < 0) {
           $this->planeMode = true;
           fprintf(STDERR, "Transformed into a Plane [$this->depth]\n");
@@ -67,6 +69,7 @@ function mainLoop($file = "list"): int
     "*********" => 0,
     "Distance" => $this->distance,
     "Depth" => $this->depth,
+    "Aim" => $this->aim,
     "Vector" => $this->depth * $this->distance,
   ]);
   if($this->planeMode){
@@ -109,6 +112,6 @@ public static function MotionToName(int $input): string {
 }
 
 }
-$task = new aoc_2a();
+$task = new aoc_2b();
 
 exit($task->mainLoop());
